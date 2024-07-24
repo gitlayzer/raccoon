@@ -38,7 +38,7 @@ var (
 type DaemonConfig struct {
 	clusterCIDR    string
 	nodeName       string
-	enableIptabnes bool
+	enableIptables bool
 }
 
 type Reconciler struct {
@@ -54,7 +54,7 @@ type Reconciler struct {
 func (d *DaemonConfig) addFlags() {
 	flag.StringVar(&d.clusterCIDR, "cluster-cidr", "", "cluster pod network cidr")
 	flag.StringVar(&d.nodeName, "node-name", "", "current node name")
-	flag.BoolVar(&d.enableIptabnes, "enable-iptabnes", false, "add iptables forward and nat rules")
+	flag.BoolVar(&d.enableIptables, "enable-iptables", false, "add iptables forward and nat rules")
 }
 
 func (d *DaemonConfig) parseConfig() error {
@@ -183,7 +183,7 @@ Loop:
 
 	_, err = bridge.CreateBridge(subnetConf.Bridge, 1500, net.IPNet{})
 
-	if d.enableIptabnes {
+	if d.enableIptables {
 		if err := addIptables(subnetConf.Bridge, hostLink.Attrs().Name, subnetConf.Subnet); err != nil {
 			return nil, err
 		}
