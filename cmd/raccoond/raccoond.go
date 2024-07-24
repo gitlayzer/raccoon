@@ -182,6 +182,9 @@ Loop:
 	log.Info(fmt.Sprintf("get hostlink success, type: %s, name: %s, index: %d", hostLink.Type(), hostLink.Attrs().Name, hostLink.Attrs().Index))
 
 	_, err = bridge.CreateBridge(subnetConf.Bridge, 1500, net.IPNet{})
+	if err != nil {
+		return nil, err
+	}
 
 	if d.enableIptables {
 		if err := addIptables(subnetConf.Bridge, hostLink.Attrs().Name, subnetConf.Subnet); err != nil {
@@ -192,6 +195,9 @@ Loop:
 
 	routes := make(map[string]netlink.Route)
 	routeList, err := netlink.RouteList(hostLink, netlink.FAMILY_V4)
+	if err != nil {
+		return nil, err
+	}
 	for _, route := range routeList {
 		if route.Dst != nil && !route.Dst.IP.Equal(nodeCIDR.IP) && cidr.Contains(route.Dst.IP) {
 			routes[route.Dst.String()] = route

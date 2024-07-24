@@ -10,7 +10,7 @@ build:
 
 REGISTRY=layzer/raccoon
 
-VERSION=$(shell git describe --tags --always)
+VERSION=$(shell git rev-parse --short HEAD)
 
 docker-build: build
 	docker build -t $(REGISTRY):$(VERSION) .
